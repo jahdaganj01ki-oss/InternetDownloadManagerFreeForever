@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"/>
+  <title>Add Download</title>
+  <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body class="add-body">
+  <div id="add-form-wrap">
+    <h2>Add New Download</h2>
+    <form id="add-form" novalidate>
+      <label>URL
+        <input type="url" id="add-url" placeholder="https://example.com/file.zip" required autofocus/>
+      </label>
+      <label>Save to folder
+        <div class="folder-row">
+          <input type="text" id="add-folder" readonly/>
+          <button type="button" id="add-browse">Browse…</button>
+        </div>
+      </label>
+      <label>Filename (optional)
+        <input type="text" id="add-filename" placeholder="Auto-detect"/>
+      </label>
+      <label>Connections
+        <input type="number" id="add-conns" min="1" max="16" value="8"/>
+      </label>
+      <div id="add-error" class="error-msg" hidden></div>
+      <div class="add-footer">
+        <button type="submit" class="primary" id="btn-start">Download</button>
+        <button type="button" id="btn-cancel-add">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <script src="js/add.js"></script>
+</body>
+</html>

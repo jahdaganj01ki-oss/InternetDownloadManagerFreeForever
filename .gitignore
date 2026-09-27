@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+*.fdm_tmp/
+fdm-chrome-extension.zip

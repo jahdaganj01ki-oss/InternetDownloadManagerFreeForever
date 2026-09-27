@@ -1,0 +1,73 @@
+{
+  "name": "free-download-manager",
+  "version": "1.0.0",
+  "description": "Free, open-source, forever-free Internet Download Manager clone with Chrome extension",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win --x64",
+    "build:all": "electron-builder -mwl",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.freedownloadmanager.app",
+    "productName": "Free Download Manager",
+    "copyright": "Copyright © 2024. MIT License.",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "!src/renderer/img/.gitkeep"
+    ],
+    "extraResources": [
+      {
+        "from": "chrome-extension",
+        "to": "chrome-extension",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis",     "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Free Download Manager"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "jahdaganj01ki-oss",
+        "repo": "InternetDownloadManagerFreeForever"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "keywords": ["download", "manager", "idm", "free", "open-source", "electron"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jahdaganj01ki-oss/InternetDownloadManagerFreeForever.git"
+  }
+}

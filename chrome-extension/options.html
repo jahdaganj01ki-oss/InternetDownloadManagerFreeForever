@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>FDM Extension Options</title>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; padding: 24px; max-width: 480px; color: #202124; }
+    h1 { font-size: 18px; margin-bottom: 20px; color: #1a73e8; }
+    label { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+    label span { font-size: 12px; color: #666; }
+    input[type="number"], input[type="text"] {
+      padding: 7px 9px; border: 1px solid #dde1e7; border-radius: 5px; font-size: 13px; width: 100%;
+    }
+    input:focus { outline: 2px solid #1a73e8; outline-offset: -1px; }
+    .row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .row label { flex-direction: row; align-items: center; gap: 8px; margin: 0; cursor: pointer; }
+    button {
+      background: #1a73e8; color: #fff; border: none; border-radius: 5px;
+      padding: 8px 20px; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    button:hover { background: #1558b0; }
+    #saved { color: #34a853; font-size: 12px; margin-left: 10px; opacity: 0; transition: opacity .3s; }
+    #saved.show { opacity: 1; }
+    h2 { font-size: 13px; font-weight: 700; margin: 20px 0 10px; color: #444; text-transform: uppercase; letter-spacing: .5px; }
+    .ext-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .ext-chip {
+      padding: 3px 10px; border-radius: 12px; border: 1px solid #dde1e7; font-size: 11px;
+      cursor: pointer; background: #f7f8fa; user-select: none; transition: background .12s;
+    }
+    .ext-chip.on { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+  </style>
+</head>
+<body>
+  <h1>Free Download Manager — Extension Settings</h1>
+
+  <label>
+    FDM Desktop Port
+    <span>The port FDM is listening on (default: 43218). Change if you modified it in FDM settings.</span>
+    <input type="number" id="fdm-port" min="1024" max="65535" value="43218"/>
+  </label>
+
+  <h2>Auto-intercept file types</h2>
+  <div class="ext-grid" id="ext-grid"></div>
+
+  <div class="row">
+    <label><input type="checkbox" id="intercept-all"/> Intercept ALL downloads (regardless of type)</label>
+  </div>
+  <div class="row">
+    <label><input type="checkbox" id="show-notif" checked/> Show notification when sending to FDM</label>
+  </div>
+
+  <button id="save-btn">Save</button>
+  <span id="saved">✔ Saved</span>
+
+  <script src="options.js"></script>
+</body>
+</html>

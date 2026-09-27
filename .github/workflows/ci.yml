@@ -1,0 +1,49 @@
+name: CI — Lint & Validate
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+      - 'master'
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint & Syntax Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Node.js syntax (all src files)
+        run: |
+          find src -name "*.js" | xargs node --check
+          echo "✅ All source files syntax OK"
+
+      - name: Validate Chrome extension manifest
+        run: |
+          node -e "
+            const m = require('./chrome-extension/manifest.json');
+            if (m.manifest_version !== 3) throw new Error('Expected MV3');
+            if (!m.background || !m.background.service_worker) throw new Error('Missing service_worker');
+            if (!m.action || !m.action.default_popup) throw new Error('Missing popup');
+            console.log('✅ Manifest valid:', m.name, 'v' + m.version);
+          "
+
+      - name: Validate package.json
+        run: node -e "
+          const p = require('./package.json');
+          ['name','version','main','scripts'].forEach(k => { if (!p[k]) throw new Error('Missing: ' + k); });
+          console.log('✅ package.json valid:', p.name, 'v' + p.version);
+        "

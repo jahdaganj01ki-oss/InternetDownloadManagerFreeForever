@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"/>
+  <title>Free Download Manager</title>
+  <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+  <!-- Toolbar -->
+  <header id="toolbar">
+    <button id="btn-add" class="tb-btn primary" title="Add new download (Ctrl+N)">
+      <span class="icon">＋</span> Add URL
+    </button>
+    <button id="btn-pause-all" class="tb-btn" title="Pause all">⏸ Pause All</button>
+    <button id="btn-resume-all" class="tb-btn" title="Resume all">▶ Resume All</button>
+    <div class="tb-sep"></div>
+    <button id="btn-settings" class="tb-btn" title="Settings">⚙ Settings</button>
+    <div class="tb-spacer"></div>
+    <span id="status-bar-summary"></span>
+  </header>
+
+  <!-- Main layout -->
+  <div id="layout">
+    <!-- Sidebar: categories -->
+    <nav id="sidebar">
+      <ul id="cat-list">
+        <li class="cat-item active" data-cat="All"><span class="cat-icon">📥</span> All Downloads <span class="cat-badge" id="badge-All"></span></li>
+        <li class="cat-item" data-cat="Downloading"><span class="cat-icon">⬇</span> Downloading <span class="cat-badge" id="badge-Downloading"></span></li>
+        <li class="cat-item" data-cat="Completed"><span class="cat-icon">✔</span> Completed <span class="cat-badge" id="badge-Completed"></span></li>
+        <li class="cat-item" data-cat="Paused"><span class="cat-icon">⏸</span> Paused <span class="cat-badge" id="badge-Paused"></span></li>
+        <li class="cat-item" data-cat="Documents"><span class="cat-icon">📄</span> Documents <span class="cat-badge" id="badge-Documents"></span></li>
+        <li class="cat-item" data-cat="Music"><span class="cat-icon">🎵</span> Music <span class="cat-badge" id="badge-Music"></span></li>
+        <li class="cat-item" data-cat="Videos"><span class="cat-icon">🎬</span> Videos <span class="cat-badge" id="badge-Videos"></span></li>
+        <li class="cat-item" data-cat="Compressed"><span class="cat-icon">🗜</span> Compressed <span class="cat-badge" id="badge-Compressed"></span></li>
+        <li class="cat-item" data-cat="Programs"><span class="cat-icon">💾</span> Programs <span class="cat-badge" id="badge-Programs"></span></li>
+        <li class="cat-item" data-cat="Images"><span class="cat-icon">🖼</span> Images <span class="cat-badge" id="badge-Images"></span></li>
+        <li class="cat-item" data-cat="General"><span class="cat-icon">📦</span> Other <span class="cat-badge" id="badge-General"></span></li>
+      </ul>
+    </nav>
+
+    <!-- Download list -->
+    <main id="content">
+      <div id="download-list" role="list" aria-label="Downloads"></div>
+      <div id="empty-state" hidden>
+        <div class="empty-icon">📥</div>
+        <p>No downloads yet</p>
+        <p class="empty-sub">Click <strong>Add URL</strong> or use the Chrome extension to start downloading.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Context menu -->
+  <div id="ctx-menu" class="context-menu" hidden role="menu">
+    <div class="ctx-item" data-action="open"      role="menuitem">Open File</div>
+    <div class="ctx-item" data-action="folder"    role="menuitem">Open Folder</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" data-action="pause"     role="menuitem">Pause</div>
+    <div class="ctx-item" data-action="resume"    role="menuitem">Resume</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" data-action="copy-url"  role="menuitem">Copy URL</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item danger" data-action="remove"     role="menuitem">Remove from List</div>
+    <div class="ctx-item danger" data-action="remove-del" role="menuitem">Remove &amp; Delete File</div>
+  </div>
+
+  <!-- Settings modal -->
+  <div id="settings-overlay" class="overlay" hidden role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="modal" id="settings-modal">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="modal-close" id="settings-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h3>Download</h3>
+          <label>Default save folder
+            <div class="folder-row">
+              <input type="text" id="s-save-folder" readonly/>
+              <button id="s-browse">Browse…</button>
+            </div>
+          </label>
+          <label>Max connections per file
+            <input type="number" id="s-max-conn" min="1" max="16"/>
+          </label>
+          <label>Max simultaneous downloads
+            <input type="number" id="s-max-sim" min="1" max="10"/>
+          </label>
+          <label class="row-label">
+            <input type="checkbox" id="s-ask-where"/> Ask where to save each file
+          </label>
+        </div>
+        <div class="settings-section">
+          <h3>Speed Limit</h3>
+          <label class="row-label">
+            <input type="checkbox" id="s-speed-en"/> Enable speed limit
+          </label>
+          <label>Max download speed (KB/s)
+            <input type="number" id="s-speed-val" min="1"/>
+          </label>
+        </div>
+        <div class="settings-section">
+          <h3>Scheduler</h3>
+          <label class="row-label">
+            <input type="checkbox" id="s-sched-en"/> Enable scheduler
+          </label>
+          <label>Start time
+            <input type="time" id="s-sched-start"/>
+          </label>
+          <label>Stop time
+            <input type="time" id="s-sched-stop"/>
+          </label>
+        </div>
+        <div class="settings-section">
+          <h3>Interface</h3>
+          <label class="row-label">
+            <input type="checkbox" id="s-tray"/> Minimize to system tray
+          </label>
+          <label>Theme
+            <select id="s-theme">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
+        </div>
+        <div class="settings-section">
+          <h3>Chrome Extension</h3>
+          <p class="hint">The extension communicates with FDM on port <strong id="nm-port-display">43218</strong>. Install it from the <code>chrome-extension/</code> folder in the app directory.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="settings-save" class="primary">Save</button>
+        <button id="settings-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/renderer.js"></script>
+</body>
+</html>
